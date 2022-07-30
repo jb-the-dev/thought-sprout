@@ -34,11 +34,10 @@ const ContactInfo = () => {
     };
     if (currentContact) {
       await axios.put(`/contacts/${contactId}`, newContact);
-      navigate("/garden");
     } else {
       await axios.post("/contacts", newContact);
-      navigate("/garden");
     }
+    navigate("/garden");
   }
 
   return (

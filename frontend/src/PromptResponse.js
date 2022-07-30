@@ -15,9 +15,9 @@ export default function PromptResponse() {
     fetchData();
   }, [promptResponseId]);
 
-  async function handleDeleteResponse(responseId) {
-    await axios.delete(`/promptResponses/${responseId}`);
-  }
+  // async function handleDeleteResponse(responseId) {
+  //   await axios.delete(`/promptResponses/${responseId}`);
+  // }
 
   async function handleSubmitResponse(event) {
     event.preventDefault();
@@ -40,9 +40,6 @@ export default function PromptResponse() {
         defaultValue={promptResponse?.response}
       />
       <button type="submit">Save Response</button>
-      <button onClick={() => handleDeleteResponse(promptResponseId)}>
-        Delete Response
-      </button>
     </form>
   );
 }
