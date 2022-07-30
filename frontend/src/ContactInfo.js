@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-const userId = "627d9f575cab57c66e023e67";
+const userId = "62e53e70e1d41c7b662489a5"; //TODO make dynamic
 
 const ContactInfo = () => {
   const [currentContact, setCurrentContact] = useState();
