@@ -2,13 +2,14 @@ const User = require("../models/user");
 const PromptResponse = require("../models/promptResponse");
 const Contact = require("../models/contact");
 const express = require("express");
+const mongoose = require('mongoose')
 
 const router = express.Router();
 
 const prompts = ["Prompt 1", "Prompt 2", "Prompt 3"];
 
 router.get("/prompts", async (req, res) => {
-  const userId = "627d9f575cab57c66e023e67";
+  const userId = "62e53e70e1d41c7b662489a5"; //TODO make dynamic
   const contacts = await Contact.find({ userId });
   const promptIndex = Math.floor(Math.random() * prompts.length);
   const prompt = prompts[promptIndex];
@@ -24,12 +25,13 @@ router.post("/users/:userId/promptResponses", async function (req, res) {
   if (!user) {
     res.status(404).send("User not found");
   }
-  const promptResponse = new PromptResponse({
+  const data = {
     question,
     response,
-    userId,
-    contactId,
-  });
+    userId: mongoose.Types.ObjectId(userId),
+    contactId: mongoose.Types.ObjectId(contactId),
+  }
+  const promptResponse = new PromptResponse(data);
   const savedPromptResponse = await promptResponse.save();
   res.json(savedPromptResponse);
 });

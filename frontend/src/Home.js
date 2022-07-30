@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import axios from "axios";
 
@@ -8,6 +8,7 @@ function Home() {
   const [promptMessage, setPromptMessage] = useState("");
   const [recipient, setRecipient] = useState("");
   const responseRef = useRef();
+  const navigate = useNavigate();
 
   async function generatePrompt() {
     const response = await axios.get("/prompts");
@@ -22,6 +23,7 @@ function Home() {
       userId: "62e53e70e1d41c7b662489a5", //TODO make dynamic
       contactId: recipient._id,
     });
+    navigate(`/contacts/${recipient._id}`)
   }
 
   return (
