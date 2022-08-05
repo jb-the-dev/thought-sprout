@@ -1,44 +1,68 @@
-const mongoose = require('mongoose')
+// This file should work regardless of the app running
+// The only concern here is the database
 
-/*
-TODO seed users first
-TODO seed contacts second (relies on user_id)
-TODO seed prompts third (relies on contact_id)
+const mongoose = require("mongoose");
+const {faker} = require("@faker-js/faker");
 
-    To seed, use https://fakerjs.dev/
+// import models
+const Contact = require("./src/models/contact");
+const User = require("./src/models/user");
+const PromptResponse = require("./src/models/promptResponse");
 
-    Configure the objects to match the shape of the data being used
+async function seedItUp(){
+    for (let i = 0; i <= 15; i++){
+        
+        // USER OBJECT
+        const user = new User({
+            email: faker.internet.email(),
+            password: faker.word.adjective(),
+            firstName: faker.name.firstName(),
+            lastName: faker.name.lastName(),
+        });
+        const savedUser = await user.save()
+        
+        for(let j = 0; j <= 15; j++){
+            
+            // CONTACT OBJECT
+            const contact = new Contact({
+                user: savedUser._id,
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
+                email: faker.internet.email(),
+                notes: faker.lorem.paragraph(),
+            });
+            const savedContact = await contact.save()
+        
+            for (let k = 0; k <= 5; k++){
 
-    Learn and use mongoose syntax for seeding
-
-    Iterate over list of objects to seed
-
-    Learn and use mongoose CLI command to initiate seed
-
-    CONTACT OBJECT
-    const contact = new Contact({
-        user: 1,
-        firstName: 'jb',
-        lastName: 'hop',
-        email: 'a@b.com',
-        notes: 'plop'
-      })
-
-    PROMPT RESPONSE OBJECT
-    const data = {
-    question,
-    response,
-    userId: mongoose.Types.ObjectId(userId),
-    contactId: mongoose.Types.ObjectId(contactId),
+            // PROMPT RESPONSE OBJECT
+            const data = {
+                question: faker.animal.crocodilia(),
+                response: faker.lorem.paragraph(),
+                  userId: savedUser._id,
+                  contactId: savedContact._id,
+            };
+            const promptResponse = new PromptResponse(data);
+            await promptResponse.save()
+            }
         }
-    const promptResponse = new PromptResponse(data);
+    }   
+}
 
-    USER OBJECT
-    {
-        user_id,
-        email,
-        password,
-        firstName,
-        lastName,
-    }
-*/
+async function seedItDown(){
+    await PromptResponse.deleteMany({});
+    await Contact.deleteMany({});
+    await User.deleteMany({});
+}
+
+async function runSeeds(){
+    // connect to db using mongoose
+    await mongoose.connect("mongodb://localhost:27017/brain_blast");
+
+    await seedItDown();
+    await seedItUp();
+
+    await mongoose.disconnect();
+}
+
+runSeeds();
