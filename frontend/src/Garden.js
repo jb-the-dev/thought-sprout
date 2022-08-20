@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const userId = "62e53e70e1d41c7b662489a5"; //TODO make dynamic
+const userId = "62e53e70e1d41c7b662489a5"; //TODO make dynamic using cookies
 
 const Garden = () => {
   const [contacts, setContacts] = useState([]);

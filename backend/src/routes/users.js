@@ -31,17 +31,23 @@ router.post('/', async function(request, response) {
 
 // Login user
 router.post('/login', async function(request, response) {
+    console.log("body", request.body);
     const { email, password } = request.body
     const existingUser = await User.findOne({email})
+    console.log("email", {email});
     if (!existingUser){
         response.status(400).send('Invalid email/password')
+        response.end()
     }
     const isValid = await bcrypt.compare(password, existingUser.password) //? change property to "passwordHash"?
     if (!isValid) {
         response.status(400).send('Invalid email/password')
+        response.end()
     }
+    console.log('request.session', request.session);
     request.session.userId = existingUser._id
-    response.redirect('/', 302)
+    response.cookie('userId', existingUser._id).redirect('/', 302)
+    response.end()
 })
 
 // Delete user
