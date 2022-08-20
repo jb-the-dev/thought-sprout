@@ -3,23 +3,39 @@
 
 const mongoose = require("mongoose");
 const {faker} = require("@faker-js/faker");
+const bcrypt = require("bcryptjs")
 
 // import models
 const Contact = require("./src/models/contact");
 const User = require("./src/models/user");
 const PromptResponse = require("./src/models/promptResponse");
 
+
+async function hashItUp({ email, password, firstName, lastName }){
+    const hashedPassword = await bcrypt.hash(password, 10)
+    const user = new User({ email, password: hashedPassword, firstName, lastName })
+    const savedUser = await user.save()
+    return savedUser
+}
+
 async function seedItUp(){
+    // USER OBJECT
+    await hashItUp({
+        email: 'abc@123.com',
+        password: 'tiramisu',
+        firstName: "attila",
+        lastName: "hun",
+    });
+    
     for (let i = 0; i <= 15; i++){
-        
+
         // USER OBJECT
-        const user = new User({
+        const savedUser = await hashItUp({
             email: faker.internet.email(),
             password: faker.word.adjective(),
             firstName: faker.name.firstName(),
             lastName: faker.name.lastName(),
         });
-        const savedUser = await user.save()
         
         for(let j = 0; j <= 15; j++){
             

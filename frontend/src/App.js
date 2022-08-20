@@ -5,6 +5,7 @@ import Contact from "./Contact";
 import Home from "./Home";
 import ContactInfo from "./ContactInfo";
 import PromptResponse from "./PromptResponse";
+import Login from "./Login";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Link to="/">Home</Link> | <Link to="/garden">Garden</Link>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/garden" element={<Garden />} />
           <Route path="/contacts/:contactId" element={<Contact />} />
           <Route path="/contacts/:contactId/edit" element={<ContactInfo />} />

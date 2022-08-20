@@ -15,10 +15,13 @@ const port = 3001
 
 app.use(bodyParser.json())
 
-// GET - reading some data (R in CRUD)
-// POST - creating some data (C in CRUD)
-// PATCH - update (U in CRUD)
-// DELETE - D in CRUD
+app.use(session({
+    name: '__session',
+    secret: 'felwfkldajfowefoejfoajfoejsoheoguh439h298gh2oi3lk2j',
+    cookie: {secure: true},
+    resave: false,
+    saveUninitialized: true,
+}))
 
 // Defining routes/endpoints
 
@@ -26,13 +29,6 @@ app.use('/users', userRouter)
 app.use(contactRouter)
 app.use(promptRouter)
 
-app.use(session({
-    name: '__session',
-    secret: 'felwfkldajfowefoejfoajfoejsoheoguh439h298gh2oi3lk2j',
-    cookie: {secure: true},
-    resave: false,
-    saveUninitialized: false
-}))
 
 // Start express server so that client/browser has something to connect to
 app.listen(port, function() {
