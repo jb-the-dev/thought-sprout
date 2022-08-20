@@ -2,6 +2,7 @@
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const express = require('express')
+const session = require('express-session')
 
 // Routers
 const userRouter = require('./routes/users')
@@ -24,6 +25,14 @@ app.use(bodyParser.json())
 app.use('/users', userRouter)
 app.use(contactRouter)
 app.use(promptRouter)
+
+app.use(session({
+    name: '__session',
+    secret: 'felwfkldajfowefoejfoajfoejsoheoguh439h298gh2oi3lk2j',
+    cookie: {secure: true},
+    resave: false,
+    saveUninitialized: false
+}))
 
 // Start express server so that client/browser has something to connect to
 app.listen(port, function() {
