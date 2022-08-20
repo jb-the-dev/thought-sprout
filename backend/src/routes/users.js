@@ -1,5 +1,7 @@
-const User = require('../models/user')
+const bcrypt = require('bcryptjs')
 const express = require('express')
+
+const User = require('../models/user')
 
 const router = express.Router()
 
@@ -21,9 +23,25 @@ router.get('/:userId', async function(request, response) {
 // Create user
 router.post('/', async function(request, response) {
     const { email, password, firstName, lastName } = request.body
-    const user = new User({ email, password, firstName, lastName })
+    const hashedPassword = await bcrypt.hash(password, 10)
+    const user = new User({ email, password: hashedPassword, firstName, lastName })
     const savedUser = await user.save()
     response.json(savedUser)
+})
+
+// Login user
+router.post('/login', async function(request, response) {
+    const { email, password } = request.body
+    const existingUser = await User.findOne({email})
+    if (!existingUser){
+        response.status(400).send('Invalid email/password')
+    }
+    const isValid = await bcrypt.compare(password, existingUser.password) //? change property to "passwordHash"?
+    if (!isValid) {
+        response.status(400).send('Invalid email/password')
+    }
+    request.session.userId = existingUser._id
+    response.redirect('/', 302)
 })
 
 // Delete user
