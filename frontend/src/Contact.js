@@ -25,16 +25,22 @@ export default function Contact() {
     );
     setPromptResponses(filteredResponses);
   }
-
-
-  //TODO add contacts notes and email to display right below the contact's name
   
   return (
     <div>
       <h1>
         {contact?.firstName} {contact?.lastName}
       </h1>
-      
+      <h3>
+        Email: {contact?.email}
+      </h3>
+      <h4>
+        Notes about {contact?.firstName}: {contact?.notes}
+      </h4>
+      <button>
+        <Link to={`/contacts/${contact?._id}/edit`}>Edit Contact</Link>
+      </button>
+      <h3>Prompt Responses</h3>
       {promptResponses.map((respObj) => (
         <div key={respObj._id}>
           <p>
@@ -49,9 +55,6 @@ export default function Contact() {
         </div>
       ))}
       <button type="submit">Bundle blossoms</button>
-      <button>
-        <Link to={`/contacts/${contact?._id}/edit`}>Edit Contact</Link>
-      </button>
     </div>
   );
 }
