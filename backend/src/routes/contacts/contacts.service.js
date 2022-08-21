@@ -5,12 +5,12 @@ This file contains the interactions with the database and the business logic
 
 const Contact = require("../../models/contact");
 const User = require("../../models/user");
+const asyncErrorBoundary = require("../../errors/asyncErrorBoundary")
 
+// VALIDATORS
+//TODO add contactExists and userExists validators
 
-//TODO add asyncErrorBoundary
-
-
-
+// HANDLERS
 async function getContactsByUser (req,res) {
     const contacts = await Contact.find({ user: req.params.userId });
     res.json(contacts);
@@ -72,9 +72,6 @@ async function updateContact(req, res){
 }
 
 async function deleteContact(req, res){
-    // look up contact
-    // run delete
-    // return status code
     const contactToDelete = await Contact.findByIdAndDelete(req.params.contactId)
     if (!contactToDelete) res.status(404).send("Contact not found")
     res.json(contactToDelete)
@@ -82,9 +79,9 @@ async function deleteContact(req, res){
 
 
 module.exports = {
-    list: getContactsByUser,
-    get: getContact,
-    create: createContact,
-    update: updateContact,
-    destroy: deleteContact
+    list: asyncErrorBoundary(getContactsByUser),
+    get: asyncErrorBoundary(getContact),
+    create: asyncErrorBoundary(createContact),
+    update: asyncErrorBoundary(updateContact),
+    destroy: asyncErrorBoundary(deleteContact)
 }
