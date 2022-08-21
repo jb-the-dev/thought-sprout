@@ -3,14 +3,12 @@ const express = require("express");
 const bodyParser = require("body-parser")
 const session = require('express-session')
 
+const app = express()
 
 // Routers
 const usersRouter = require('./routes/users')
-const contactsRouter = require('./routes/contacts')
+const contactsRouter = require('./routes/contacts/contacts.router')
 const promptsRouter = require('./routes/prompts')
-
-// Express setup
-const app = express()
 
 app.use(bodyParser.json())
 
