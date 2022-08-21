@@ -3,16 +3,22 @@ const Contact = require("../../models/contact");
 const User = require("../../models/user");
 const PromptResponse = require("../../models/promptResponse");
 const { default: mongoose } = require("mongoose");
-const prompts = require("../../promptsList")
+const prompts = require("../../promptsList");
+const { userExists } = require("../users/users.service");
 
 // VALIDATORS
+async function promptResponseExists(req, res, next) {
+    const promptResponse = await PromptResponse.findById(req.params.promptResponseId)
+    if (promptResponse){
+        res.locals.promptResponse = promptResponse
+        return next();
+    }
+    next({ status: 404, message: "Prompt response not found."})
+}
 
 // HANDLERS
 async function getPromptResponse(req, res){
-    const promptResponse = await PromptResponse.findById(req.params.promptResponseId)
-    if (!promptResponse) res.status(404).send("Prompt response not found")
-    // TODO separate validation code (above)
-    res.json(promptResponse)
+    res.json(res.locals.promptResponse)
 }
 
 async function getRandomPrompt(req, res) {
@@ -41,8 +47,6 @@ async function getPromptResponsesByContact(req, res) {
 
 async function createPromptResponse(req, res) {
     const { question, response, userId, contactId } = req.body;
-    const user = await User.findById(userId);
-    if(!user) res.status(404).send("User not found")
 
     const data = {
         question,
@@ -57,33 +61,28 @@ async function createPromptResponse(req, res) {
 }
 
 async function updatePromptResponse(req, res) {
-    const { response } = req.body;
   const promptResponse = await PromptResponse.findById(req.params.promptResponseId);
-  if (!promptResponse) res.status(404).send("Prompt response not found");
 
-  if (response) {
-    promptResponse.response = response;
+  if (req.body.response) {
+    promptResponse.response = req.body.response;
   }
-  const newPromptResponse = await promptResponse.save();
-  res.json(newPromptResponse);
+  const updatedPromptResponse = await promptResponse.save();
+  res.json(updatedPromptResponse);
 }
 
 async function deletePromptResponse(req, res){
     const promptResponseToDelete = await PromptResponse.findByIdAndDelete(
-        req.params.promptResponseId
-      );
-      if (!promptResponseToDelete) {
-        res.status(404).send("Prompt response not found");
-      }
-      res.json(promptResponseToDelete);
+        res.locals.promptResponse._id
+    );
+    res.json(promptResponseToDelete);
 }
 
 module.exports = {
-    get: asyncErrorBoundary(getPromptResponse),
+    get: [asyncErrorBoundary(promptResponseExists), getPromptResponse],
     getRandomPrompt: asyncErrorBoundary(getRandomPrompt),
     listByUser: asyncErrorBoundary(getPromptResponsesByUser),
     listByContact: asyncErrorBoundary(getPromptResponsesByContact),
-    create: asyncErrorBoundary(createPromptResponse),
-    update: asyncErrorBoundary(updatePromptResponse),
-    destroy: asyncErrorBoundary(deletePromptResponse)
+    create: [asyncErrorBoundary(userExists),createPromptResponse],
+    update: [asyncErrorBoundary(promptResponseExists),updatePromptResponse],
+    destroy: [asyncErrorBoundary(promptResponseExists), deletePromptResponse]
 }
