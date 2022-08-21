@@ -4,10 +4,10 @@ const express = require("express");
 
 const router = express.Router();
 // Get contacts
-router.get("/users/:userId/contacts", async function (request, response) {
-  const contacts = await Contact.find({ user: request.params.userId });
-  response.json(contacts);
-});
+// router.get("/users/:userId/contacts", async function (request, response) {
+//   const contacts = await Contact.find({ user: request.params.userId });
+//   response.json(contacts);
+// });
 
 // Get contact (single resource)
 router.get("/contacts/:contactId", async function (request, response) {
