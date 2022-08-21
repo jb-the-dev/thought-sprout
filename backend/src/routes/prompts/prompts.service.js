@@ -3,9 +3,7 @@ const Contact = require("../../models/contact");
 const User = require("../../models/user");
 const PromptResponse = require("../../models/promptResponse");
 const { default: mongoose } = require("mongoose");
-
-const prompts = ["Prompt 1", "Prompt 2", "Prompt 3"];
-// TODO create separate file for prompts
+const prompts = require("../../promptsList")
 
 // VALIDATORS
 
