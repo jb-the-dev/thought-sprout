@@ -10,13 +10,13 @@ const router = express.Router();
 // });
 
 // Get contact (single resource)
-router.get("/contacts/:contactId", async function (request, response) {
-  const contact = await Contact.findById(request.params.contactId);
-  if (!contact) {
-    response.status(404).send("Contact not found");
-  }
-  response.json(contact);
-});
+// router.get("/contacts/:contactId", async function (request, response) {
+//   const contact = await Contact.findById(request.params.contactId);
+//   if (!contact) {
+//     response.status(404).send("Contact not found");
+//   }
+//   response.json(contact);
+// });
 
 // Create contact
 router.post("/contacts", async function (request, response) {

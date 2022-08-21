@@ -7,6 +7,9 @@ router
     .route("/users/:userId/contacts")
     .get(contactsService.list)
 
+router
+    .route("/contacts/:contactId")
+    .get(contactsService.get)
 
 
 
