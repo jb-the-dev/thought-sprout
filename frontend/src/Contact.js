@@ -26,11 +26,15 @@ export default function Contact() {
     setPromptResponses(filteredResponses);
   }
 
+
+  //TODO add contacts notes and email to display right below the contact's name
+  
   return (
     <div>
       <h1>
         {contact?.firstName} {contact?.lastName}
       </h1>
+      
       {promptResponses.map((respObj) => (
         <div key={respObj._id}>
           <p>

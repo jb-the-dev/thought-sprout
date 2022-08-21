@@ -16,6 +16,10 @@ router
     .route("/contacts")
     .post(contactsService.create)
 
+router
+    .route("/users/:userId/contacts/:contactId")
+    .delete(contactsService.destroy)
+
 
 
 

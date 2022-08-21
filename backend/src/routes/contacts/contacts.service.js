@@ -71,10 +71,20 @@ async function updateContact(req, res){
     res.json(savedContact)
 }
 
+async function deleteContact(req, res){
+    // look up contact
+    // run delete
+    // return status code
+    const contactToDelete = await Contact.findByIdAndDelete(req.params.contactId)
+    if (!contactToDelete) res.status(404).send("Contact not found")
+    res.json(contactToDelete)
+}
+
 
 module.exports = {
     list: getContactsByUser,
     get: getContact,
     create: createContact,
-    update: updateContact
+    update: updateContact,
+    destroy: deleteContact
 }
