@@ -10,6 +10,13 @@ router
 router
     .route("/contacts/:contactId")
     .get(contactsService.get)
+    .put(contactsService.update)
+
+router
+    .route("/contacts")
+    .post(contactsService.create)
+
+
 
 
 
