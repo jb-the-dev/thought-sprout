@@ -5,7 +5,7 @@ const session = require('express-session')
 
 const app = express()
 
-const usersRouter = require('./routes/users')
+const usersRouter = require('./routes/users/users.router')
 const contactsRouter = require('./routes/contacts/contacts.router')
 const promptsRouter = require('./routes/prompts/prompts.router');
 
