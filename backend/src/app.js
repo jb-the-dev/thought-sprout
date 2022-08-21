@@ -7,7 +7,7 @@ const app = express()
 
 const usersRouter = require('./routes/users')
 const contactsRouter = require('./routes/contacts/contacts.router')
-const promptsRouter = require('./routes/prompts');
+const promptsRouter = require('./routes/prompts/prompts.router');
 
 const notFound = require("./errors/notFound");
 const errorHandler = require("./errors/errorHandler");
