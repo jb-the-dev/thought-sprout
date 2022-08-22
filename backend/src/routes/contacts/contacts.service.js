@@ -5,83 +5,81 @@ This file contains the interactions with the database and the business logic
 
 const Contact = require("../../models/contact");
 const User = require("../../models/user");
-const asyncErrorBoundary = require("../../errors/asyncErrorBoundary")
+const asyncErrorBoundary = require("../../errors/asyncErrorBoundary");
+const { userExists } = require("../users/users.service");
 
 // VALIDATORS
-//TODO add contactExists and userExists validators
+async function contactExists(req, res, next) {
+  const contact = await Contact.findById(req.params.contactId);
+  if (contact) {
+    res.locals.contact = contact;
+    return next();
+  }
+  next({ status: 404, message: "Contact not found." });
+}
 
 // HANDLERS
-async function getContactsByUser (req,res) {
-    const contacts = await Contact.find({ user: req.params.userId });
-    res.json(contacts);
+async function getContactsByUser(req, res) {
+  const contacts = await Contact.find({ user: req.params.userId });
+  res.json(contacts);
 }
 
 async function getContact(req, res) {
-    const contact = await Contact.findById(req.params.contactId)
-    // TODO split the validation into its own function
-    if (!contact) res.status(404).send("Contact not found")
-    res.json(contact)
+  res.json(res.locals.contact);
 }
 
-async function createContact(req, res,){
-    const {
-        userId,
-        contact: { firstName, lastName, email, notes },
-      } = req.body;
-      const user = await User.findById(userId);
-      if (!user) {
-          res.status(404).send("User not found");
-        }
-    // TODO separate userExists validation (code above, make sure to include "next" param)
+async function createContact(req, res) {
+  const { firstName, lastName, email, notes } = req.body.contact;
 
-      const contact = new Contact({
-        user: user._id,
-        firstName,
-        lastName,
-        email,
-        notes,
-      });
+  const contact = new Contact({
+    user: res.locals.user._id,
+    firstName,
+    lastName,
+    email,
+    notes,
+  });
 
-      const savedContact = await contact.save();
-      res.json(savedContact);
+  const savedContact = await contact.save();
+  res.json(savedContact);
 }
 
-async function updateContact(req, res){
-    const {
-        userId,
-        contact: { firstName, lastName, email, notes }
-    } = req.body;
-    const user = await User.findById(userId);
-    if(!user) {
-        res.status(404).send("User not found")
-    }
+async function updateContact(req, res) {
+  const { firstName, lastName, email, notes } = req.body.contact;
 
-    // get contact to update from db
-    const contactToUpdate = await Contact.findById(req.params.contactId)
-    if(!contactToUpdate) res.status(404).send("Contact not found")
+  const contactToUpdate = res.locals.contact;
 
-    contactToUpdate.overwrite({
-        user: user._id,
-        firstName,
-        lastName,
-        email,
-        notes
-    });
-    const savedContact = await contactToUpdate.save();
-    res.json(savedContact)
+  contactToUpdate.overwrite({
+    user: res.locals.user._id,
+    firstName,
+    lastName,
+    email,
+    notes,
+  });
+
+  const savedContact = await contactToUpdate.save();
+  res.json(savedContact);
 }
 
-async function deleteContact(req, res){
-    const contactToDelete = await Contact.findByIdAndDelete(req.params.contactId)
-    if (!contactToDelete) res.status(404).send("Contact not found")
-    res.json(contactToDelete)
+async function deleteContact(req, res) {
+  const contactToDelete = await Contact.findByIdAndDelete(
+    res.locals.contact._id
+  );
+  res.json(contactToDelete);
 }
-
 
 module.exports = {
-    list: asyncErrorBoundary(getContactsByUser),
-    get: asyncErrorBoundary(getContact),
-    create: asyncErrorBoundary(createContact),
-    update: asyncErrorBoundary(updateContact),
-    destroy: asyncErrorBoundary(deleteContact)
-}
+  list: asyncErrorBoundary(getContactsByUser),
+  get: [asyncErrorBoundary(contactExists), getContact],
+  create: [
+    asyncErrorBoundary(userExists),
+    asyncErrorBoundary(createContact)],
+  update: [
+    asyncErrorBoundary(userExists),
+    asyncErrorBoundary(contactExists),
+    asyncErrorBoundary(updateContact),
+  ],
+  destroy: [
+    asyncErrorBoundary(contactExists),
+    asyncErrorBoundary(deleteContact),
+  ],
+};
