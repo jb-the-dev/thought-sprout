@@ -5,7 +5,7 @@ const User = require("../../models/user");
 
 // VALIDATORS
 async function userExists(req, res, next) {
-  const user = await User.findById(req.params.userId);
+  const user = await User.findById(req.params.userId || req.body.userId );
   if (user) {
     res.locals.user = user;
     return next();
