@@ -1,24 +1,25 @@
+const { default: mongoose } = require("mongoose");
 const asyncErrorBoundary = require("../../errors/asyncErrorBoundary");
 const Contact = require("../../models/contact");
-const User = require("../../models/user");
 const PromptResponse = require("../../models/promptResponse");
-const { default: mongoose } = require("mongoose");
 const prompts = require("../../promptsList");
 const { userExists } = require("../users/users.service");
 
 // VALIDATORS
 async function promptResponseExists(req, res, next) {
-    const promptResponse = await PromptResponse.findById(req.params.promptResponseId)
-    if (promptResponse){
-        res.locals.promptResponse = promptResponse
-        return next();
-    }
-    next({ status: 404, message: "Prompt response not found."})
+  const promptResponse = await PromptResponse.findById(
+    req.params.promptResponseId
+  );
+  if (promptResponse) {
+    res.locals.promptResponse = promptResponse;
+    return next();
+  }
+  next({ status: 404, message: "Prompt response not found." });
 }
 
 // HANDLERS
-async function getPromptResponse(req, res){
-    res.json(res.locals.promptResponse)
+function getPromptResponse(req, res) {
+  res.json(res.locals.promptResponse);
 }
 
 async function getRandomPrompt(req, res) {
@@ -32,36 +33,38 @@ async function getRandomPrompt(req, res) {
 }
 
 async function getPromptResponsesByUser(req, res) {
-    const promptResponse = await PromptResponse.find({
-        userId: req.params.userId,
-      });
-      res.json(promptResponse);
+  const promptResponse = await PromptResponse.find({
+    userId: req.params.userId,
+  });
+  res.json(promptResponse);
 }
 
 async function getPromptResponsesByContact(req, res) {
-    const promptResponse = await PromptResponse.find({
-        contactId: req.params.contactId,
-      });
-      res.json(promptResponse);
+  const promptResponse = await PromptResponse.find({
+    contactId: req.params.contactId,
+  });
+  res.json(promptResponse);
 }
 
 async function createPromptResponse(req, res) {
-    const { question, response, userId, contactId } = req.body;
+  const { question, response, userId, contactId } = req.body;
 
-    const data = {
-        question,
-        response,
-        userId: mongoose.Types.ObjectId(userId),
-        contactId: mongoose.Types.ObjectId(contactId)
-    }
-    const promptResponse = new PromptResponse(data);
+  const data = {
+    question,
+    response,
+    userId: mongoose.Types.ObjectId(userId),
+    contactId: mongoose.Types.ObjectId(contactId),
+  };
+  const promptResponse = new PromptResponse(data);
 
-    const savedPromptResponse = await promptResponse.save();
-    res.json(savedPromptResponse)
+  const savedPromptResponse = await promptResponse.save();
+  res.json(savedPromptResponse);
 }
 
 async function updatePromptResponse(req, res) {
-  const promptResponse = await PromptResponse.findById(req.params.promptResponseId);
+  const promptResponse = await PromptResponse.findById(
+    req.params.promptResponseId
+  );
 
   if (req.body.response) {
     promptResponse.response = req.body.response;
@@ -70,19 +73,28 @@ async function updatePromptResponse(req, res) {
   res.json(updatedPromptResponse);
 }
 
-async function deletePromptResponse(req, res){
-    const promptResponseToDelete = await PromptResponse.findByIdAndDelete(
-        res.locals.promptResponse._id
-    );
-    res.json(promptResponseToDelete);
+async function deletePromptResponse(req, res) {
+  const promptResponseToDelete = await PromptResponse.findByIdAndDelete(
+    res.locals.promptResponse._id
+  );
+  res.json(promptResponseToDelete);
 }
 
 module.exports = {
-    get: [asyncErrorBoundary(promptResponseExists), getPromptResponse],
-    getRandomPrompt: asyncErrorBoundary(getRandomPrompt),
-    listByUser: asyncErrorBoundary(getPromptResponsesByUser),
-    listByContact: asyncErrorBoundary(getPromptResponsesByContact),
-    create: [asyncErrorBoundary(userExists),createPromptResponse],
-    update: [asyncErrorBoundary(promptResponseExists),updatePromptResponse],
-    destroy: [asyncErrorBoundary(promptResponseExists), deletePromptResponse]
-}
+  get: [asyncErrorBoundary(promptResponseExists), getPromptResponse],
+  getRandomPrompt: asyncErrorBoundary(getRandomPrompt),
+  listByUser: asyncErrorBoundary(getPromptResponsesByUser),
+  listByContact: asyncErrorBoundary(getPromptResponsesByContact),
+  create: [
+    asyncErrorBoundary(userExists),
+    asyncErrorBoundary(createPromptResponse),
+  ],
+  update: [
+    asyncErrorBoundary(promptResponseExists),
+    asyncErrorBoundary(updatePromptResponse),
+  ],
+  destroy: [
+    asyncErrorBoundary(promptResponseExists),
+    asyncErrorBoundary(deletePromptResponse),
+  ],
+};
