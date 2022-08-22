@@ -3,16 +3,16 @@
 
     Instead, the asyncErrorBoundary takes the async function in as it's first parameter, "delegate," and runs it as normal. 
 */
-function asyncErrorBoundary(delegate, defaultStatus){
-    return (req, res, next) => {
-        Promise.resolve()
-          .then(() => delegate(req, res, next))
-          .catch((error = {}) => {
-            const { status = defaultStatus, message = error } = error;
-            next({ status, message });
-          });
-      };
-    }
-    
+
+function asyncErrorBoundary(delegate, defaultStatus) {
+  return (req, res, next) => {
+    Promise.resolve()
+      .then(() => delegate(req, res, next))
+      .catch((error = {}) => {
+        const { status = defaultStatus, message = error } = error;
+        next({ status, message });
+      });
+  };
+}
+
 module.exports = asyncErrorBoundary;
-    

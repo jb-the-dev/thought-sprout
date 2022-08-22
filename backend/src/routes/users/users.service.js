@@ -5,13 +5,14 @@ const User = require("../../models/user");
 
 // VALIDATORS
 async function userExists(req, res, next) {
-  const user = await User.findById(req.params.userId || req.body.userId );
+  const user = await User.findById(req.params.userId || req.body.userId);
   if (user) {
     res.locals.user = user;
     return next();
   }
   next({ status: 404, message: "User not found." });
 }
+//TODO create hasValidProperties validator for update
 
 // HANDLERS
 async function listUsers(req, res) {
@@ -38,9 +39,8 @@ async function createUser(req, res) {
 
 async function updateUser(req, res) {
   const { firstName, lastName } = req.body;
-  const userToUpdate = res.locals.user
+  const userToUpdate = res.locals.user;
 
-  //TODO separate property validator
   if (firstName) {
     userToUpdate.firstName = firstName;
   }
@@ -52,8 +52,7 @@ async function updateUser(req, res) {
 }
 
 async function deleteUser(req, res) {
-  const userToDelete = await User.findByIdAndDelete(req.params.userId);
-  if (!userToDelete) res.status(404).send("User not found");
+  const userToDelete = await User.findByIdAndDelete(res.locals.user._id);
   res.json(userToDelete);
 }
 
@@ -82,7 +81,7 @@ module.exports = {
   list: asyncErrorBoundary(listUsers),
   get: [asyncErrorBoundary(userExists), getUser],
   create: asyncErrorBoundary(createUser),
-  update: [asyncErrorBoundary(userExists), updateUser],
-  destroy: asyncErrorBoundary(deleteUser),
+  update: [asyncErrorBoundary(userExists), asyncErrorBoundary(updateUser)],
+  destroy: [asyncErrorBoundary(userExists), asyncErrorBoundary(deleteUser)],
   login: asyncErrorBoundary(loginUser),
 };

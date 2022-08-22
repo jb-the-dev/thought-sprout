@@ -70,9 +70,7 @@ async function deleteContact(req, res) {
 module.exports = {
   list: asyncErrorBoundary(getContactsByUser),
   get: [asyncErrorBoundary(contactExists), getContact],
-  create: [
-    asyncErrorBoundary(userExists),
-    asyncErrorBoundary(createContact)],
+  create: [asyncErrorBoundary(userExists), asyncErrorBoundary(createContact)],
   update: [
     asyncErrorBoundary(userExists),
     asyncErrorBoundary(contactExists),
