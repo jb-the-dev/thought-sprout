@@ -4,3 +4,7 @@
     max-width: 600px;
     margin: 0 auto;
 }
+
+.jumbotron {
+    background-color: rgb(128, 187, 129);
+}

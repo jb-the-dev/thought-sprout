@@ -1,8 +1,8 @@
 .App {
   text-align: center;
-  background-color: #191917;
+  background-color: #4e4e4b;
   color: #efefef;
-  height: 100vh;
+  height: auto;
 }
 
 .App-logo {
@@ -34,7 +34,7 @@ a {
 input,
 textarea,
 button {
-  background-color: #282c34;
+  background-color: #595e68;
   color: white;
 }
 
