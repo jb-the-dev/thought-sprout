@@ -2,13 +2,14 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-const userId = "6300fb8f2d244e59d544bb17"; //TODO make dynamic
+const userId = "630a1ef790596421fdcbecfa"; //TODO make dynamic
 
 const ContactInfo = () => {
   const [currentContact, setCurrentContact] = useState();
   const navigate = useNavigate();
 
   const { contactId } = useParams();
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`/contacts/${contactId}`);
@@ -50,6 +51,7 @@ const ContactInfo = () => {
             type="text"
             name="firstName"
             defaultValue={currentContact?.firstName}
+            required
           />
         </label>
         <label>
@@ -72,7 +74,7 @@ const ContactInfo = () => {
           Notes:
           <textarea name="notes" defaultValue={currentContact?.notes} />
         </label>
-        <button type="submit">Add/Update Contact</button>
+        <button type="submit">{contactId ? "Update Contact" : "Add Contact"}</button>
       </form>
     </div>
   );

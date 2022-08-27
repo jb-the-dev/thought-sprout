@@ -7,6 +7,7 @@ import ContactInfo from "./ContactInfo";
 import PromptResponse from "./PromptResponse";
 import Login from "./Login";
 import Header from "./Header"
+import Blossoms from "./Blossoms";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/garden" element={<Garden />} />
           <Route path="/contacts/:contactId" element={<Contact />} />
           <Route path="/contacts/:contactId/edit" element={<ContactInfo />} />
+          <Route path="/contacts/:contactId/blossoms" element={<Blossoms />} />
           <Route path="/add-contact" element={<ContactInfo />} />
           <Route
             path="/promptResponses/:promptResponseId/edit"

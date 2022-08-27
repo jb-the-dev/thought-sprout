@@ -23,7 +23,7 @@ function getPromptResponse(req, res) {
 }
 
 async function getRandomPrompt(req, res) {
-  const userId = "6300fb8f2d244e59d544bb17"; //TODO make dynamic
+  const userId = "630a1ef790596421fdcbecfa"; //TODO make dynamic
   const contacts = await Contact.find({ userId });
   const promptIndex = Math.floor(Math.random() * prompts.length);
   const prompt = prompts[promptIndex];

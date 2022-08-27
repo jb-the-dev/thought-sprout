@@ -4,6 +4,8 @@
 const mongoose = require("mongoose");
 const {faker} = require("@faker-js/faker");
 const bcrypt = require("bcryptjs")
+require("dotenv").config();
+const { DATABASE_URL } = process.env
 
 // import models
 const Contact = require("./src/models/contact");
@@ -73,7 +75,7 @@ async function seedItDown(){
 
 async function runSeeds(){
     // connect to db using mongoose
-    await mongoose.connect("mongodb://localhost:27017/brain_blast");
+    await mongoose.connect(DATABASE_URL);
 
     await seedItDown();
     await seedItUp();

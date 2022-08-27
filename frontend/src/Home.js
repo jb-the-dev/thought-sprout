@@ -17,10 +17,10 @@ function Home() {
   }
 
   function sendPromptResponse() {
-    axios.post("/users/6300fb8f2d244e59d544bb17/promptResponses", { //TODO make userId dynamic
+    axios.post("/users/630a1ef790596421fdcbecfa/promptResponses", { //TODO make userId dynamic
       question: promptMessage,
       response: responseRef.current.value,
-      userId: "6300fb8f2d244e59d544bb17", //TODO make userId dynamic
+      userId: "630a1ef790596421fdcbecfa", //TODO make userId dynamic
       contactId: recipient._id,
     });
     navigate(`/contacts/${recipient._id}`)

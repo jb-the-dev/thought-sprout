@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
+require("dotenv").config();
+const { SESSION_SECRET } = process.env;
 
 const app = express();
 
@@ -18,7 +20,7 @@ app.use(bodyParser.json());
 app.use(
   session({
     name: "__session",
-    secret: "felwfkldajfowefoejfoajfoejsoheoguh439h298gh2oi3lk2j",
+    secret: SESSION_SECRET,
     cookie: { secure: true },
     resave: false,
     saveUninitialized: true,

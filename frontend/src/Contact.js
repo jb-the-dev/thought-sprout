@@ -6,6 +6,8 @@ export default function Contact() {
   const { contactId } = useParams();
   const [contact, setContact] = useState(null);
   const [promptResponses, setPromptResponses] = useState([]);
+
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`/contacts/${contactId}`);
@@ -25,6 +27,8 @@ export default function Contact() {
     );
     setPromptResponses(filteredResponses);
   }
+
+  //TODO build onSubmit handler for bundle blossoms
   
   return (
     <div>
@@ -54,7 +58,9 @@ export default function Contact() {
           </button>
         </div>
       ))}
-      <button type="submit">Bundle blossoms</button>
+      <button>
+        <Link to={`/contacts/${contact?._id}/blossoms`}>Bundle Blossoms</Link>
+      </button>
     </div>
   );
 }
