@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// TODO switch email to username
 const userSchema = mongoose.Schema({
   email: {
     type: String,
