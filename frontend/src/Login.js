@@ -11,6 +11,8 @@ export default function Login() {
         })
     }
 
+
+    //TODO if logged in already, do not show login page; redirect to home page
   return (
     <div>
       <h1>Login</h1>

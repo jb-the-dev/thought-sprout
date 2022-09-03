@@ -2,8 +2,10 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const MongoStore = require("connect-mongo")
 require("dotenv").config();
 const { SESSION_SECRET } = process.env;
+const userModel = require("./models/user")
 
 const app = express();
 
@@ -19,11 +21,10 @@ app.use(bodyParser.json());
 // SESSION
 app.use(
   session({
-    name: "__session",
     secret: SESSION_SECRET,
-    cookie: { secure: true },
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL})
   })
 );
 
@@ -31,6 +32,14 @@ app.use(
 app.use("/users", usersRouter);
 app.use(contactsRouter);
 app.use(promptsRouter);
+
+app.get('/me', async (req, res) => {
+  if (req.session.userId) {
+    const user = await userModel.findOne({ _id: req.session.userId })
+    res.json(user)
+  }
+  else res.redirect('/login')
+})
 
 // ERRORS
 app.use(notFound);

@@ -2,15 +2,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const userId = "630a1ef790596421fdcbecfa"; //TODO make dynamic using cookies
-
 const Garden = () => {
   const [contacts, setContacts] = useState([]);
   const [promptResponsesByContact, setPromptResponsesByContact] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
-      const contactResponse = await axios.get(`/users/${userId}/contacts`);
+      const contactResponse = await axios.get(`/contacts`); //TODO refactor backend to match shorter route
       const contacts = contactResponse.data;
       setContacts(contacts);
       const data = {};
@@ -26,7 +24,7 @@ const Garden = () => {
   }, []);
 
   async function handleDeleteContact(contactId) {
-    await axios.delete(`/users/${userId}/contacts/${contactId}`);
+    await axios.delete(`/contacts/${contactId}`); //TODO refactor backend
     const filteredContacts = contacts.filter(
       (contact) => contact._id !== contactId
     );

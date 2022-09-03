@@ -6,9 +6,12 @@ This file contains the interactions with the database and the business logic
 const Contact = require("../../models/contact");
 const User = require("../../models/user");
 const asyncErrorBoundary = require("../../errors/asyncErrorBoundary");
-const { userExists } = require("../users/users.service");
+const { userExists } = require("../users/users.service"); //* might still use once it's refactored for session obj
 
 // VALIDATORS
+
+//TODO at some point, add validator to check that session object exists;
+
 async function contactExists(req, res, next) {
   const contact = await Contact.findById(req.params.contactId);
   if (contact) {
@@ -20,7 +23,7 @@ async function contactExists(req, res, next) {
 
 // HANDLERS
 async function getContactsByUser(req, res) {
-  const contacts = await Contact.find({ user: req.params.userId });
+  const contacts = await Contact.find({ user: req.session.userId });
   res.json(contacts);
 }
 
@@ -32,7 +35,7 @@ async function createContact(req, res) {
   const { firstName, lastName, email, notes } = req.body.contact;
 
   const contact = new Contact({
-    user: res.locals.user._id,
+    user: req.session.userId,
     firstName,
     lastName,
     email,
@@ -49,7 +52,7 @@ async function updateContact(req, res) {
   const contactToUpdate = res.locals.contact;
 
   contactToUpdate.overwrite({
-    user: res.locals.user._id,
+    user: req.session.userId,
     firstName,
     lastName,
     email,
@@ -70,9 +73,8 @@ async function deleteContact(req, res) {
 module.exports = {
   list: asyncErrorBoundary(getContactsByUser),
   get: [asyncErrorBoundary(contactExists), getContact],
-  create: [asyncErrorBoundary(userExists), asyncErrorBoundary(createContact)],
+  create: asyncErrorBoundary(createContact),
   update: [
-    asyncErrorBoundary(userExists),
     asyncErrorBoundary(contactExists),
     asyncErrorBoundary(updateContact),
   ],

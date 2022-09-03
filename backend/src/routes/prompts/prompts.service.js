@@ -23,20 +23,12 @@ function getPromptResponse(req, res) {
 }
 
 async function getRandomPrompt(req, res) {
-  const userId = "630a1ef790596421fdcbecfa"; //TODO make dynamic
-  const contacts = await Contact.find({ userId });
+  const contacts = await Contact.find({ user: req.session.userId });
   const promptIndex = Math.floor(Math.random() * prompts.length);
   const prompt = prompts[promptIndex];
   const contactIndex = Math.floor(Math.random() * contacts.length);
   const contact = contacts[contactIndex];
   res.json({ contact, prompt });
-}
-
-async function getPromptResponsesByUser(req, res) {
-  const promptResponse = await PromptResponse.find({
-    userId: req.params.userId,
-  });
-  res.json(promptResponse);
 }
 
 async function getPromptResponsesByContact(req, res) {
@@ -47,12 +39,12 @@ async function getPromptResponsesByContact(req, res) {
 }
 
 async function createPromptResponse(req, res) {
-  const { question, response, userId, contactId } = req.body;
+  const { question, response, contactId } = req.body;
 
   const data = {
     question,
     response,
-    userId: mongoose.Types.ObjectId(userId),
+    userId: mongoose.Types.ObjectId(req.session.userId),
     contactId: mongoose.Types.ObjectId(contactId),
   };
   const promptResponse = new PromptResponse(data);
@@ -83,12 +75,8 @@ async function deletePromptResponse(req, res) {
 module.exports = {
   get: [asyncErrorBoundary(promptResponseExists), getPromptResponse],
   getRandomPrompt: asyncErrorBoundary(getRandomPrompt),
-  listByUser: asyncErrorBoundary(getPromptResponsesByUser),
   listByContact: asyncErrorBoundary(getPromptResponsesByContact),
-  create: [
-    asyncErrorBoundary(userExists),
-    asyncErrorBoundary(createPromptResponse),
-  ],
+  create: asyncErrorBoundary(createPromptResponse),
   update: [
     asyncErrorBoundary(promptResponseExists),
     asyncErrorBoundary(updatePromptResponse),

@@ -72,7 +72,6 @@ async function loginUser(req, res) {
   }
   console.log("req.session", req.session);
   req.session.userId = existingUser._id;
-  res.cookie("userId", existingUser._id).redirect("/", 302);
   res.end();
 }
 
