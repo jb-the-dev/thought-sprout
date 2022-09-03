@@ -2,8 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-const userId = "630a1ef790596421fdcbecfa"; //TODO make dynamic
-
 const ContactInfo = () => {
   const [currentContact, setCurrentContact] = useState();
   const navigate = useNavigate();
@@ -25,7 +23,6 @@ const ContactInfo = () => {
     const form = event.currentTarget;
     const formData = new FormData(form);
     const newContact = {
-      userId,
       contact: {
         email: formData.get("email"),
         firstName: formData.get("firstName"),

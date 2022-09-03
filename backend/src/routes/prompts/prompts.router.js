@@ -6,23 +6,24 @@ router
   .route("/prompts")
   .get(promptsService.getRandomPrompt)
   .all(methodNotAllowed);
-
-router
+  
+  
+  router
   .route("/promptResponses/:promptResponseId")
   .get(promptsService.get)
   .patch(promptsService.update)
   .delete(promptsService.destroy)
   .all(methodNotAllowed);
-
-router
-  .route("/users/:userId/promptResponses")
-  .get(promptsService.listByUser)
-  .post(promptsService.create)
-  .all(methodNotAllowed);
-
-router
+  
+  //TODO refactor route below to use query params for contactId
+  router
   .route("/contacts/:contactId/promptResponses")
   .get(promptsService.listByContact)
   .all(methodNotAllowed);
-
+  
+  router
+    .route("/promptResponses")
+    .post(promptsService.create)
+    .all(methodNotAllowed);
+    
 module.exports = router;

@@ -17,10 +17,9 @@ function Home() {
   }
 
   function sendPromptResponse() {
-    axios.post("/users/630a1ef790596421fdcbecfa/promptResponses", { //TODO make userId dynamic
+    axios.post("/promptResponses", {
       question: promptMessage,
       response: responseRef.current.value,
-      userId: "630a1ef790596421fdcbecfa", //TODO make userId dynamic
       contactId: recipient._id,
     });
     navigate(`/contacts/${recipient._id}`)
