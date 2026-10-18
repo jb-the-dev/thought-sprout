@@ -35,8 +35,8 @@ async function seedItUp(){
         const savedUser = await hashItUp({
             email: faker.internet.email(),
             password: faker.word.adjective(),
-            firstName: faker.name.firstName(),
-            lastName: faker.name.lastName(),
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
         });
         
         for(let j = 0; j <= 15; j++){
@@ -44,8 +44,8 @@ async function seedItUp(){
             // CONTACT OBJECT
             const contact = new Contact({
                 user: savedUser._id,
-                firstName: faker.name.firstName(),
-                lastName: faker.name.lastName(),
+                firstName: faker.person.firstName(),
+                lastName: faker.person.lastName(),
                 email: faker.internet.email(),
                 notes: faker.lorem.paragraph(),
             });
