@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 const express = require("express");
-const bodyParser = require("body-parser");
 const session = require("express-session");
-const MongoStore = require("connect-mongo")
-require("dotenv").config();
+const { MongoStore } = require("connect-mongo");
+require("dotenv").config({ quiet: true });
 const { SESSION_SECRET } = process.env;
 const userModel = require("./models/user")
 
@@ -16,7 +15,7 @@ const promptsRouter = require("./routes/prompts/prompts.router");
 const notFound = require("./errors/notFound");
 const errorHandler = require("./errors/errorHandler");
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 // SESSION
 app.use(

@@ -44,8 +44,8 @@ async function createPromptResponse(req, res) {
   const data = {
     question,
     response,
-    userId: mongoose.Types.ObjectId(req.session.userId),
-    contactId: mongoose.Types.ObjectId(contactId),
+    userId: new mongoose.Types.ObjectId(req.session.userId),
+    contactId: new mongoose.Types.ObjectId(contactId),
   };
   const promptResponse = new PromptResponse(data);
 

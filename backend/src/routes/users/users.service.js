@@ -62,13 +62,11 @@ async function loginUser(req, res) {
   const existingUser = await User.findOne({ email });
   console.log("email", { email });
   if (!existingUser) {
-    res.status(400).send("Invalid email/password");
-    res.end();
+    return res.status(400).send("Invalid email/password");
   }
   const isValid = await bcrypt.compare(password, existingUser.password); //? change property to "passwordHash"?
   if (!isValid) {
-    res.status(400).send("Invalid email/password");
-    res.end();
+    return res.status(400).send("Invalid email/password");
   }
   console.log("req.session", req.session);
   req.session.userId = existingUser._id;
