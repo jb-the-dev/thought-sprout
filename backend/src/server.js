@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ quiet: true });
 const { PORT = 3001, DATABASE_URL } = process.env;
 
 const app = require("./app");

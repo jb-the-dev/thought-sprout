@@ -4,7 +4,7 @@
 const mongoose = require("mongoose");
 const {faker} = require("@faker-js/faker");
 const bcrypt = require("bcryptjs")
-require("dotenv").config();
+require("dotenv").config({ quiet: true });
 const { DATABASE_URL } = process.env
 
 // import models
